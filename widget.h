@@ -3,6 +3,8 @@
 
 #include <QWidget>
 #include <QSerialPort>
+#include <QTcpSocket>
+#include <QPointer>
 
 namespace Ui {
 class Widget;
@@ -23,10 +25,16 @@ private:
 
 private:
     Ui::Widget *ui;
+    //485
     QByteArray mcuData;  //查询03数据包
+    QByteArray recive_485; //
+    QByteArray pduHeader;
 
     QVector<quint16> mcuRegisterValue;
     QVector<QByteArray> writeDataList;
+
+    int deviceAddress = 1;
+    QTcpSocket *modbustcp = nullptr;
 };
 
 #endif // WIDGET_H

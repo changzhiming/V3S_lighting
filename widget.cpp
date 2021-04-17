@@ -24,6 +24,7 @@ Widget::Widget(QWidget *parent) :
 
     QSerialPort *transmit= new QSerialPort("ttyS1", this);
     transmit->setBaudRate(iniSetting.value("BaudRate").toInt());
+    qDebug()<<iniSetting.value("BaudRate").toInt();
     transmit->setParity(QSerialPort::NoParity);
     transmit->setDataBits(QSerialPort::Data8);
     transmit->setStopBits(QSerialPort::OneStop);
@@ -48,6 +49,8 @@ Widget::Widget(QWidget *parent) :
             }
         });
         timer->start(5);
+    } else {
+        qDebug()<<"485 seial open fail reboot";
     }
 
     //! mcu communication
@@ -70,6 +73,10 @@ Widget::Widget(QWidget *parent) :
         connect(timer, &QTimer::timeout, this, [this]{
             writeDataToMcu(QByteArray().append(0x03).append(resigtercount));
 
+            //test
+            if(mcuData.length() != 80) {
+                qDebug()<<mcuData.toHex();
+            }
             mcuData.clear();
         });
         timer->start(500);
